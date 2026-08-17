@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:ExpenseTrackerApp.Models"
+             x:Class="ExpenseTrackerApp.Views.CategoryPickerPage"
+             Title="เลือกหมวดหมู่">
+
+    <VerticalStackLayout Padding="16" Spacing="10">
+        <SearchBar Placeholder="ค้นหาหมวดหมู่" />
+
+        <CollectionView x:Name="CategoryList" ItemsLayout="VerticalGrid, 3">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Category">
+                    <Frame Style="{StaticResource CardStyle}" Margin="4">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="{Binding Icon}" FontSize="22" HorizontalOptions="Center" />
+                            <Label Text="{Binding Name}" FontSize="10" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+
+</ContentPage>

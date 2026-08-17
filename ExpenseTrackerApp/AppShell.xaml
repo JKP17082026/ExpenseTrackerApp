@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:ExpenseTrackerApp.Views"
+       x:Class="ExpenseTrackerApp.AppShell"
+       Shell.FlyoutBehavior="Disabled"
+       Shell.TabBarBackgroundColor="White"
+       Shell.TabBarTitleColor="#E8A33D"
+       Shell.TabBarUnselectedColor="#C9A35A">
+
+    <TabBar>
+        <ShellContent Title="ภาพรวม" Icon="tab_overview.svg" ContentTemplate="{DataTemplate views:OverviewPage}" />
+        <ShellContent Title="สรุปรายงาน" Icon="tab_report.svg" ContentTemplate="{DataTemplate views:ReportsPage}" />
+        <ShellContent Title="เพิ่ม" Icon="tab_add.svg" ContentTemplate="{DataTemplate views:AddTransactionPage}" />
+        <ShellContent Title="กระเป๋าเงิน" Icon="tab_wallet.svg" ContentTemplate="{DataTemplate views:AccountsPage}" />
+        <ShellContent Title="เมนู" Icon="tab_menu.svg" ContentTemplate="{DataTemplate views:BudgetPage}" />
+    </TabBar>
+
+</Shell>

@@ -1,0 +1,79 @@
+name: Build iOS App
+
+# วิธีใช้: push โค้ดขึ้น GitHub repo แล้วเข้าแท็บ "Actions" เพื่อดูสถานะ build
+# เมื่อ build เสร็จ ไฟล์ .ipa จะอยู่ใน "Artifacts" ท้าย log ให้กดโหลดได้เลย
+# รันบนเครื่อง macOS ของ GitHub ฟรี (มี free tier ให้ใช้ต่อเดือน) ไม่ต้องมี Mac เอง
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {} # กดรันเองได้จากหน้า Actions โดยไม่ต้อง push
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install MAUI iOS workload
+        run: dotnet workload install maui-ios
+
+      - name: Restore dependencies
+        run: dotnet restore ExpenseTrackerApp/ExpenseTrackerApp.csproj
+
+      # Build แบบไม่ sign (unsigned) — ใช้ตรวจสอบว่าคอมไพล์ผ่านหรือไม่ และรันบน Simulator ได้
+      # การ build ที่ sign แล้วสำหรับติดตั้งเครื่องจริง ต้องเพิ่ม step เซ็น certificate/provisioning profile
+      # (ต้องมี Apple Developer Account ก่อน ดูหมายเหตุด้านล่าง)
+      - name: Build for iOS Simulator (unsigned)
+        run: |
+          dotnet build ExpenseTrackerApp/ExpenseTrackerApp.csproj \
+            -f net10.0-ios \
+            -c Debug \
+            -p:RuntimeIdentifier=iossimulator-x64 \
+            -p:CodesignKey="" \
+            -p:CodesignProvision=""
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-build
+          path: ExpenseTrackerApp/ExpenseTrackerApp/bin/Debug/net10.0-ios/iossimulator-x64/*.app
+
+  # ตัวอย่าง job สำหรับ build ลงเครื่องจริง (.ipa) — ต้อง uncomment และใส่ secrets เองก่อนใช้
+  # ต้องมี Apple Developer Account และสร้าง Distribution Certificate + Provisioning Profile ก่อน
+  # แล้วนำไปเก็บเป็น GitHub Secrets: BUILD_CERTIFICATE_BASE64, P12_PASSWORD, PROVISIONING_PROFILE_BASE64
+  #
+  # build-ios-device:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-dotnet@v4
+  #       with:
+  #         dotnet-version: "10.0.x"
+  #     - run: dotnet workload install maui-ios
+  #     - name: Import signing certificate
+  #       env:
+  #         BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+  #         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+  #       run: |
+  #         echo "$BUILD_CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+  #         security create-keychain -p "" build.keychain
+  #         security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
+  #     - name: Build signed .ipa
+  #       run: |
+  #         dotnet build ExpenseTrackerApp/ExpenseTrackerApp.csproj \
+  #           -f net10.0-ios -c Release \
+  #           -p:ArchiveOnBuild=true \
+  #           -p:CodesignKey="iPhone Distribution" \
+  #           -p:CodesignProvision="YourProvisioningProfileName"
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ios-ipa
+  #         path: ExpenseTrackerApp/ExpenseTrackerApp/bin/Release/net10.0-ios/*.ipa

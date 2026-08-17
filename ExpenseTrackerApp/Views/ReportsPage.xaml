@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTrackerApp.ViewModels"
+             x:Class="ExpenseTrackerApp.Views.ReportsPage"
+             x:DataType="vm:OverviewViewModel"
+             Title="สรุปรายงาน">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Label Text="สรุปรายจ่ายตามหมวดหมู่" Style="{StaticResource TitleLabel}" FontSize="15" />
+
+            <!-- กราฟโดนัทวาดด้วย GraphicsView ใน ReportsPage.xaml.cs (DonutChartDrawable) -->
+            <GraphicsView x:Name="DonutChart" HeightRequest="220" WidthRequest="220" HorizontalOptions="Center" />
+
+            <Frame Style="{StaticResource CardStyle}">
+                <VerticalStackLayout>
+                    <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,6">
+                        <Label Grid.Column="0" Text="หมวดหมู่" Style="{StaticResource SubtitleLabel}" />
+                        <Label Grid.Column="1" Text="ร้อยละ (%)" Style="{StaticResource SubtitleLabel}" />
+                        <Label Grid.Column="2" Text="จำนวน (บาท)" Style="{StaticResource SubtitleLabel}" Margin="10,0,0,0" />
+                    </Grid>
+
+                    <CollectionView ItemsSource="{Binding CategorySummaries}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:CategorySummary">
+                                <Grid ColumnDefinitions="*,Auto,Auto" Padding="0,6">
+                                    <Label Grid.Column="0" TextColor="{StaticResource TextPrimary}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Icon}" />
+                                                <Span Text=" " />
+                                                <Span Text="{Binding Name}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Column="1" Text="{Binding Percent, StringFormat='{0}%'}" TextColor="{StaticResource TextPrimary}" />
+                                    <Label Grid.Column="2" Text="{Binding Amount, StringFormat='{0:N0}'}" Margin="10,0,0,0" TextColor="{StaticResource TextPrimary}" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

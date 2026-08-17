@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTrackerApp.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTrackerApp.Models"
+             x:Class="ExpenseTrackerApp.Views.AddAccountPage"
+             x:DataType="vm:AddAccountViewModel"
+             Title="สร้างกระเป๋ากันเลย">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="14">
+
+            <Label Text="กรอกรายละเอียดกระเป๋าแรกของคุณ แล้วเริ่มใช้งานกันเลย" Style="{StaticResource SubtitleLabel}" HorizontalTextAlignment="Center" />
+
+            <!-- พรีวิวการ์ด: ไอคอน + ปุ่มอัปโหลดรูป -->
+            <Frame Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding Name}" FontAttributes="Bold" TextColor="{StaticResource AccentOrange}" FontSize="18" />
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Frame Grid.Column="0" WidthRequest="56" HeightRequest="56" CornerRadius="28" Padding="0" HasShadow="False" BackgroundColor="{Binding ColorHex}">
+                            <Label Text="{Binding IconEmoji}" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Frame>
+                        <Button Grid.Column="1" Text="📷 เพิ่มรูปภาพ" BackgroundColor="Transparent" TextColor="{StaticResource TextSecondary}" HorizontalOptions="End" />
+                    </Grid>
+                    <Label Text="เลือกไอคอน" Style="{StaticResource SubtitleLabel}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- ตัวเลือกสี -->
+            <CollectionView ItemsSource="{Binding}" HeightRequest="40" Margin="0">
+                <!-- ผูกกับ AddAccountViewModel.PaletteColors ใน production; แสดงเป็นวงกลมให้แตะเลือก แล้ว set ColorHex -->
+            </CollectionView>
+
+            <!-- ประเภทกระเป๋า: เงินสด / บัญชีธนาคาร / บัตรเครดิต / เงินออม / เงินลงทุน / เงินดิจิทัล -->
+            <Picker Title="ประเภทกระเป๋า" SelectedItem="{Binding SelectedType}">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type models:AccountType}">
+                        <models:AccountType>Cash</models:AccountType>
+                        <models:AccountType>Bank</models:AccountType>
+                        <models:AccountType>CreditCard</models:AccountType>
+                        <models:AccountType>Savings</models:AccountType>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Label Text="ชื่อกระเป๋า" Style="{StaticResource SubtitleLabel}" />
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding Name}" />
+            </Frame>
+
+            <!-- ===== ฟิลด์ทั่วไป (เงินสด/ธนาคาร/ออม/ลงทุน/ดิจิทัล) ===== -->
+            <VerticalStackLayout IsVisible="{Binding IsCreditCardType, Converter={StaticResource InvertedBoolConverter}}" Spacing="6">
+                <Label Text="จำนวนเงินเริ่มต้น" Style="{StaticResource SubtitleLabel}" />
+                <Frame Style="{StaticResource CardStyle}">
+                    <Entry Text="{Binding OpeningBalance}" Placeholder="เช่น 10,000" Keyboard="Numeric" />
+                </Frame>
+            </VerticalStackLayout>
+
+            <!-- ===== ฟิลด์บัตรเครดิตเท่านั้น ===== -->
+            <VerticalStackLayout IsVisible="{Binding IsCreditCardType}" Spacing="10">
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Frame Grid.Column="0" Style="{StaticResource CardStyle}">
+                        <VerticalStackLayout>
+                            <Label Text="วงเงินคงเหลือ" Style="{StaticResource SubtitleLabel}" FontSize="10" />
+                            <Entry Text="{Binding CreditLimitRemaining}" Placeholder="เช่น 10,000" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                    </Frame>
+                    <Frame Grid.Column="1" Style="{StaticResource CardStyle}">
+                        <VerticalStackLayout>
+                            <Label Text="วงเงินสูงสุด" Style="{StaticResource SubtitleLabel}" FontSize="10" />
+                            <Entry Text="{Binding CreditLimitMax}" Placeholder="เช่น 50,000" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <Frame Style="{StaticResource CardStyle}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="การตั้งค่าวงเงิน" FontAttributes="Bold" FontSize="12" />
+                        <RadioButton Content="ใช้วงเงินแยกเฉพาะบัตรนี้" IsChecked="{Binding UseSharedCreditLimit, Converter={StaticResource InvertedBoolConverter}}" GroupName="creditLimitMode" />
+                        <RadioButton Content="ใช้วงเงินร่วมกับบัตรอื่น" IsChecked="{Binding UseSharedCreditLimit}" GroupName="creditLimitMode" />
+                        <Picker Title="เลือกบัตรที่ใช้วงเงินร่วม" ItemsSource="{Binding ExistingCreditCards}" ItemDisplayBinding="{Binding Name, x:DataType=models:Account}" SelectedItem="{Binding SharedCreditLimitGroupAccount}" IsVisible="{Binding UseSharedCreditLimit}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Frame Grid.Column="0" Style="{StaticResource CardStyle}">
+                        <VerticalStackLayout>
+                            <Label Text="วันตัดรอบบัตร" Style="{StaticResource SubtitleLabel}" FontSize="10" />
+                            <Entry Text="{Binding StatementDay}" Placeholder="1-31 เช่น 5" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                    </Frame>
+                    <Frame Grid.Column="1" Style="{StaticResource CardStyle}">
+                        <VerticalStackLayout>
+                            <Label Text="วันครบกำหนดชำระ" Style="{StaticResource SubtitleLabel}" FontSize="10" />
+                            <Entry Text="{Binding PaymentDueDay}" Placeholder="1-31 เช่น 20" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <Frame Style="{StaticResource CardStyle}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="รูปแบบรอบบิลบัตรเครดิต" FontAttributes="Bold" FontSize="12" />
+                        <RadioButton Content="วันตัดรอบเป็นวันแรกของรอบใหม่" GroupName="cycleStyle" />
+                        <RadioButton Content="วันตัดรอบเป็นวันสุดท้ายของรอบเดิม" GroupName="cycleStyle" />
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+
+            <Button Text="สร้างกระเป๋า" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" Margin="0,10,0,20" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

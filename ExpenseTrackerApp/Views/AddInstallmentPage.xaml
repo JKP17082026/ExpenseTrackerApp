@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTrackerApp.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTrackerApp.Models"
+             x:Class="ExpenseTrackerApp.Views.AddInstallmentPage"
+             x:DataType="vm:AddInstallmentViewModel"
+             Title="เพิ่มผ่อนชำระ">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <!-- ไอคอน + อัปโหลดรูป -->
+            <Grid ColumnDefinitions="Auto,*">
+                <Frame Grid.Column="0" WidthRequest="48" HeightRequest="48" CornerRadius="12" Padding="0" HasShadow="False" BackgroundColor="#FFF3D6">
+                    <Label Text="{Binding IconEmoji}" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Frame>
+                <Button Grid.Column="1" Text="อัปโหลดรูปภาพ" BackgroundColor="Transparent" TextColor="{StaticResource TextSecondary}" HorizontalOptions="End" />
+            </Grid>
+
+            <!-- หมวดหมู่: ที่อยู่อาศัย / ยานพาหนะ / บัตรเครดิต / สินค้าบริการ / ธุรกิจ / การศึกษา -->
+            <Picker Title="หมวดหมู่" SelectedItem="{Binding SelectedCategory}">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type models:InstallmentCategory}">
+                        <models:InstallmentCategory>Housing</models:InstallmentCategory>
+                        <models:InstallmentCategory>Vehicle</models:InstallmentCategory>
+                        <models:InstallmentCategory>CreditCard</models:InstallmentCategory>
+                        <models:InstallmentCategory>Product</models:InstallmentCategory>
+                        <models:InstallmentCategory>Business</models:InstallmentCategory>
+                        <models:InstallmentCategory>Education</models:InstallmentCategory>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <!-- ตัวเลือกพิเศษเมื่อเลือกหมวดหมู่ = บัตรเครดิต -->
+            <VerticalStackLayout IsVisible="{Binding ShowCreditCardOptions}" Spacing="8">
+                <Picker Title="เลือกกระเป๋า (บัตรเครดิต)" ItemsSource="{Binding CreditCardAccounts}" ItemDisplayBinding="{Binding Name, x:DataType=models:Account}" SelectedItem="{Binding LinkedCreditCard}" />
+                <Label FontSize="10" TextColor="{StaticResource TextSecondary}"
+                       Text="* หากเลือกบัตรเครดิต เมื่อชำระจะเป็นการโอนเงินไปยังบัตรเครดิต และวงเงินคงเหลือจะเพิ่มขึ้น" />
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="ตัดเงินจากบัตรเครดิตเมื่อสร้างรายการ" VerticalOptions="Center" FontSize="12" />
+                    <Switch Grid.Column="1" IsToggled="{Binding DeductFromCreditCardOnCreate}" />
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="ซ่อนในหน้าทรัพย์สินสุทธิ" VerticalOptions="Center" FontSize="12" />
+                    <Switch Grid.Column="1" IsToggled="{Binding HideFromNetWorth}" />
+                </Grid>
+            </VerticalStackLayout>
+
+            <Label Text="ชื่อรายการ" Style="{StaticResource SubtitleLabel}" />
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding Name}" Placeholder="เช่น ผ่อนบ้าน" />
+            </Frame>
+
+            <Label Text="เจ้าหนี้" Style="{StaticResource SubtitleLabel}" />
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding CreditorName}" Placeholder="เช่น ธนาคาร" />
+            </Frame>
+
+            <!-- การคิดดอกเบี้ย: คงที่ / ลดต้นลดดอก -->
+            <Label Text="การคิดดอกเบี้ย" FontAttributes="Bold" FontSize="13" Margin="0,8,0,0" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Grid.Column="0" Text="คงที่"
+                        BackgroundColor="{StaticResource AccentOrange}" TextColor="White" CornerRadius="16" />
+                <Button Grid.Column="1" Text="ลดต้นลดดอก"
+                        BackgroundColor="#EEE" TextColor="{StaticResource TextPrimary}" CornerRadius="16" />
+            </Grid>
+            <Label FontSize="10" TextColor="{StaticResource TextSecondary}"
+                   Text="คงที่: ดอกเบี้ยคิดจากเงินต้นเริ่มต้นตลอดสัญญา  |  ลดต้นลดดอก: ดอกเบี้ยคิดจากเงินต้นคงเหลือจริงแต่ละงวด (ประหยัดกว่า)" />
+
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding PrincipalTotal}" Placeholder="เงินต้นทั้งหมด เช่น 20,000" Keyboard="Numeric" />
+            </Frame>
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding AmountPaidSoFar}" Placeholder="ผ่อนชำระไปแล้ว เช่น 15,000" Keyboard="Numeric" />
+            </Frame>
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding TotalInstallments}" Placeholder="จำนวนงวดทั้งหมด เช่น 24" Keyboard="Numeric" />
+            </Frame>
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding InstallmentsPaid}" Placeholder="จำนวนงวดที่จ่ายไปแล้ว เช่น 17" Keyboard="Numeric" />
+            </Frame>
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding AnnualInterestRate}" Placeholder="อัตราดอกเบี้ย (% ต่อปี) เช่น 4.5" Keyboard="Numeric" />
+            </Frame>
+            <Frame Style="{StaticResource CardStyle}">
+                <DatePicker Date="{Binding StartDate}" />
+            </Frame>
+            <Frame Style="{StaticResource CardStyle}">
+                <DatePicker Date="{Binding ExpectedPayoffDate}" />
+            </Frame>
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding PaymentDueDayOfMonth}" Placeholder="วันที่ครบกำหนดชำระ เช่น 5" Keyboard="Numeric" />
+            </Frame>
+
+            <Label Text="วิธีคำนวณงวด" Style="{StaticResource SubtitleLabel}" />
+            <Picker Title="งวดนำ ยอดเงินจริง" SelectedItem="{Binding CountingMethod}">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type models:InstallmentCountingMethod}">
+                        <models:InstallmentCountingMethod>InstallmentLeadsActualAmount</models:InstallmentCountingMethod>
+                        <models:InstallmentCountingMethod>FixedAmountPerInstallment</models:InstallmentCountingMethod>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Frame Style="{StaticResource CardStyle}" BackgroundColor="#FFF3D6">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="ⓘ งวดเป็นตัวนำ" FontAttributes="Bold" FontSize="12" TextColor="#7A5222" />
+                    <Label FontSize="11" TextColor="#7A5222"
+                           Text="งวดที่เลือกเป็นตัวนำ จ่ายเท่าไหร่ก็นับปิดงวดนั้นได้เลย เหมาะกับเคสจ่ายตามงวดหรือมีโปะเพิ่มในงวดนั้น ตัวอย่าง: งวดละ 1,000 บาท ถ้าจ่าย 500 บาท ระบบจะนับเป็นงวด 1 ที่ปิดแล้ว และยอดจริงของงวดนั้นจะเป็น 500 บาท" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Text="บันทึกช่วยจำ" FontAttributes="Bold" FontSize="13" Margin="0,8,0,0" />
+            <Frame Style="{StaticResource CardStyle}">
+                <Editor Text="{Binding MemoNote}" Placeholder="บันทึกช่วยจำ เช่น ผ่อนของขวัญให้แฟน" HeightRequest="80" />
+            </Frame>
+
+            <Button Text="บันทึก" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" Margin="0,10,0,20" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

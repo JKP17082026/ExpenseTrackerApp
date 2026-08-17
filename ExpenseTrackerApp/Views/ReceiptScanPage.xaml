@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ExpenseTrackerApp.Views.ReceiptScanPage"
+             Title="สแกนสลิป">
+
+    <Grid RowDefinitions="*,Auto" Padding="16">
+        <!-- ใช้ Microsoft.Maui.MediaPicker หรือ CameraView (community toolkit) ในการเปิดกล้องจริง -->
+        <Frame Grid.Row="0" BackgroundColor="#111" CornerRadius="20" Padding="0">
+            <Label Text="พื้นที่แสดงภาพจากกล้อง" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
+        </Frame>
+
+        <Button Grid.Row="1" Text="📷 ถ่ายรูปสลิป" Style="{StaticResource PrimaryButton}" Clicked="OnCaptureClicked" Margin="0,10,0,0" />
+    </Grid>
+
+</ContentPage>

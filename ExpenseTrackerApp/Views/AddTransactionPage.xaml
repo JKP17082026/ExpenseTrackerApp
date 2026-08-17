@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTrackerApp.ViewModels"
+             xmlns:models="clr-namespace:ExpenseTrackerApp.Models"
+             x:Class="ExpenseTrackerApp.Views.AddTransactionPage"
+             x:DataType="vm:AddTransactionViewModel"
+             Title="รายการใหม่">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Grid.Column="0" Text="รายจ่าย" Style="{StaticResource PrimaryButton}" />
+                <Button Grid.Column="1" Text="รายรับ" BackgroundColor="#EEE" TextColor="{StaticResource TextPrimary}" CornerRadius="16" />
+            </Grid>
+
+            <Label Text="จำนวนเงิน" Style="{StaticResource SubtitleLabel}" HorizontalOptions="Center" Margin="0,10,0,0" />
+            <Entry Text="{Binding Amount}" Keyboard="Numeric" FontSize="34" HorizontalTextAlignment="Center" TextColor="{StaticResource TextPrimary}" />
+
+            <Frame Style="{StaticResource CardStyle}">
+                <Picker Title="เลือกหมวดหมู่" ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name, x:DataType=models:Category}" SelectedItem="{Binding SelectedCategory}" />
+            </Frame>
+
+            <Frame Style="{StaticResource CardStyle}">
+                <Picker Title="เลือกบัญชี" ItemsSource="{Binding Accounts}" ItemDisplayBinding="{Binding Name, x:DataType=models:Account}" SelectedItem="{Binding SelectedAccount}" />
+            </Frame>
+
+            <Frame Style="{StaticResource CardStyle}">
+                <DatePicker Date="{Binding Date}" />
+            </Frame>
+
+            <Frame Style="{StaticResource CardStyle}">
+                <Entry Text="{Binding Note}" Placeholder="หมายเหตุ (ไม่บังคับ)" />
+            </Frame>
+
+            <Button Text="📷 สแกนสลิป" BackgroundColor="#151515" TextColor="White" CornerRadius="16" HeightRequest="48" />
+
+            <Button Text="บันทึกรายการ" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" Margin="0,10,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

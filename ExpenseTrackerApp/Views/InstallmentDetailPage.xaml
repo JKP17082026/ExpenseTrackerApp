@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ExpenseTrackerApp.ViewModels"
+             x:Class="ExpenseTrackerApp.Views.InstallmentDetailPage"
+             x:DataType="vm:InstallmentDetailViewModel"
+             Title="{Binding Plan.Name}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Frame Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="6">
+                    <Grid ColumnDefinitions="*,*,*">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="{Binding Plan.InstallmentsPaid}" FontAttributes="Bold" />
+                            <Label Text="งวดที่จ่าย" Style="{StaticResource SubtitleLabel}" FontSize="10" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="{Binding Plan.RemainingBalance, StringFormat='฿{0:N0}'}" FontAttributes="Bold" />
+                            <Label Text="คงเหลือ" Style="{StaticResource SubtitleLabel}" FontSize="10" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="{Binding Plan.PrincipalTotal, StringFormat='฿{0:N0}'}" FontAttributes="Bold" />
+                            <Label Text="เงินต้น" Style="{StaticResource SubtitleLabel}" FontSize="10" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <ProgressBar Progress="{Binding Plan.ProgressPercent}" ProgressColor="{StaticResource AccentOrange}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="วิธีคิดดอกเบี้ย" Style="{StaticResource SubtitleLabel}" />
+                    <Label Text="{Binding Plan.InterestMethod}" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="ดอกเบี้ยที่จ่ายไปแล้ว" Style="{StaticResource SubtitleLabel}" />
+                    <Label Text="{Binding TotalInterestPaid, StringFormat='฿{0:N0}'}" FontAttributes="Bold" TextColor="{StaticResource ExpenseRed}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="ดอกเบี้ยที่ต้องจ่ายทั้งหมด" Style="{StaticResource SubtitleLabel}" />
+                    <Label Text="{Binding RemainingInterest, StringFormat='฿{0:N0}'}" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="ค่างวดต่อเดือน (ประมาณ)" Style="{StaticResource SubtitleLabel}" />
+                    <Label Text="{Binding EstimatedMonthlyPayment, StringFormat='฿{0:N0}'}" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Text="{Binding Plan.MemoNote}" FontSize="12" TextColor="{StaticResource TextSecondary}" IsVisible="{Binding Plan.MemoNote, Converter={StaticResource StringNotEmptyConverter}}" />
+
+            <Button Text="✓ บันทึกการจ่ายงวดนี้" Style="{StaticResource PrimaryButton}" Command="{Binding MarkInstallmentPaidCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- โทนสีหลักของแอป: ครีม/เหลืองอบอุ่น ตามธีมอ้างอิง -->
+    <Color x:Key="BackgroundTop">#FFF6DE</Color>
+    <Color x:Key="BackgroundBottom">#FFEAB8</Color>
+    <Color x:Key="CardWhite">#FFFFFF</Color>
+    <Color x:Key="TextPrimary">#5A4020</Color>
+    <Color x:Key="TextSecondary">#A08850</Color>
+    <Color x:Key="AccentOrange">#E8A33D</Color>
+    <Color x:Key="AccentDark">#4A3A1E</Color>
+    <Color x:Key="ExpenseRed">#C0503A</Color>
+    <Color x:Key="IncomeGreen">#4A8A5A</Color>
+
+    <!-- สีหมวดหมู่ (ใช้กับกราฟโดนัทและไอคอน) -->
+    <Color x:Key="CategoryPink">#F4C0D1</Color>
+    <Color x:Key="CategoryCoral">#F0997B</Color>
+    <Color x:Key="CategoryMint">#9FE1CB</Color>
+    <Color x:Key="CategoryAmber">#FAC775</Color>
+    <Color x:Key="CategoryBlue">#85B7EB</Color>
+    <Color x:Key="CategoryPurple">#AFA9EC</Color>
+
+</ResourceDictionary>
