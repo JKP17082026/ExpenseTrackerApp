@@ -38,7 +38,7 @@ jobs:
       - name: Build for iOS Simulator (unsigned)
         run: |
           dotnet build ExpenseTrackerApp/ExpenseTrackerApp.csproj \
-            -f net10.0-ios \
+            -p:TargetFramework=net10.0-ios \
             -c Debug \
             -p:RuntimeIdentifier=iossimulator-x64 \
             -p:CodesignKey="" \
