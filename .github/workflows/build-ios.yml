@@ -45,11 +45,16 @@ jobs:
             -p:CodesignKey="" \
             -p:CodesignProvision=""
 
+      - name: List build output (for debugging path)
+        run: find . -name "*.app" -type d
+
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
           name: ios-simulator-build
-          path: ExpenseTrackerApp/ExpenseTrackerApp/bin/Debug/net10.0-ios/iossimulator-x64/*.app
+          path: |
+            **/bin/**/*.app
+          if-no-files-found: warn
 
   # ตัวอย่าง job สำหรับ build ลงเครื่องจริง (.ipa) — ต้อง uncomment และใส่ secrets เองก่อนใช้
   # ต้องมี Apple Developer Account และสร้าง Distribution Certificate + Provisioning Profile ก่อน
