@@ -42,6 +42,7 @@ jobs:
             -c Debug \
             --no-restore \
             -p:RuntimeIdentifier=ios-arm64 \
+            -p:PlatformTarget=ARM64 \
             -p:BuildIpa=true \
             -p:CodesignKey="" \
             -p:CodesignProvision=""
