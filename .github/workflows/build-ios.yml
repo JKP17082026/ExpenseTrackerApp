@@ -35,7 +35,7 @@ jobs:
       # Build แบบไม่ sign (unsigned) สำหรับ "เครื่อง iPhone จริง" (arm64)
       # ไฟล์ .app ที่ได้ยังไม่ได้ sign ด้วย certificate ของ Apple
       # ต้องนำไป sign เพิ่มด้วยเครื่องมืออย่าง SideStore (ใช้ Apple ID ฟรี) ก่อนถึงจะติดตั้งลงเครื่องจริงได้
-      - name: Build for iOS Device (unsigned)
+      - name: Build for iOS Device (ad-hoc signed)
         run: |
           dotnet build ExpenseTrackerApp/ExpenseTrackerApp.csproj \
             -p:TargetFramework=net10.0-ios \
@@ -44,7 +44,7 @@ jobs:
             -p:RuntimeIdentifier=ios-arm64 \
             -p:PlatformTarget=ARM64 \
             -p:BuildIpa=true \
-            -p:CodesignKey="" \
+            -p:CodesignKey="-" \
             -p:CodesignProvision=""
 
       - name: List build output (for debugging path)
