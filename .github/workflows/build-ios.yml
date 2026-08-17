@@ -30,7 +30,7 @@ jobs:
       # ซึ่ง macOS build ไม่รองรับ target windows แล้วจะ error:
       # "To build a project targeting Windows on this operating system, set the EnableWindowsTargeting property to true."
       - name: Restore dependencies (iOS only)
-        run: dotnet restore ExpenseTrackerApp/ExpenseTrackerApp.csproj -f net10.0-ios
+        run: dotnet restore ExpenseTrackerApp/ExpenseTrackerApp.csproj -p:TargetFramework=net10.0-ios
 
       # Build แบบไม่ sign (unsigned) — ใช้ตรวจสอบว่าคอมไพล์ผ่านหรือไม่ และรันบน Simulator ได้
       # การ build ที่ sign แล้วสำหรับติดตั้งเครื่องจริง ต้องเพิ่ม step เซ็น certificate/provisioning profile
