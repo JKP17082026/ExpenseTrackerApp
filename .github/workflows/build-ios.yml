@@ -29,8 +29,8 @@ jobs:
       # ไม่งั้น dotnet จะพยายาม restore ทุก TargetFramework ในโปรเจกต์ (รวม net10.0-windows...)
       # ซึ่ง macOS build ไม่รองรับ target windows แล้วจะ error:
       # "To build a project targeting Windows on this operating system, set the EnableWindowsTargeting property to true."
-      - name: Restore dependencies (iOS only)
-        run: dotnet restore ExpenseTrackerApp/ExpenseTrackerApp.csproj -p:TargetFramework=net10.0-ios
+      - name: Restore dependencies (iOS device only)
+        run: dotnet restore ExpenseTrackerApp/ExpenseTrackerApp.csproj -p:TargetFramework=net10.0-ios -p:RuntimeIdentifier=ios-arm64
 
       # Build แบบไม่ sign (unsigned) สำหรับ "เครื่อง iPhone จริง" (arm64)
       # ไฟล์ .app ที่ได้ยังไม่ได้ sign ด้วย certificate ของ Apple
