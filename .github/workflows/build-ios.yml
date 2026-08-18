@@ -46,7 +46,8 @@ jobs:
             -p:PlatformTarget=ARM64 \
             -p:BuildIpa=true \
             -p:CodesignKey="-" \
-            -p:CodesignProvision=""
+            -p:CodesignProvision="" \
+            -p:CodesignEntitlements=""
 
       - name: List build output (for debugging path)
         run: find . \( -name "*.app" -o -name "*.ipa" \) -type d -o -name "*.ipa" -type f
