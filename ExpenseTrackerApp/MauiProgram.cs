@@ -55,9 +55,11 @@ public static class MauiProgram
 
         var app = builder.Build();
 
-        // เตรียมฐานข้อมูลตอนเปิดแอปครั้งแรก
-        var db = app.Services.GetRequiredService<IDatabaseService>();
-        db.InitializeAsync().GetAwaiter().GetResult();
+        // หมายเหตุ: ย้ายการ initialize database ออกจากตรงนี้แล้ว
+        // เพราะการเรียกแบบ .GetAwaiter().GetResult() บน main thread ตอน startup
+        // มีความเสี่ยงสูงที่จะเกิด deadlock (โดยเฉพาะบน iOS device จริง)
+        // ทำให้ iOS watchdog ฆ่าแอปทิ้งก่อนที่ scene จะสร้างเสร็จ (error 0x8BADF00D)
+        // ให้ไป initialize แบบ async ใน App.xaml.cs (OnStart) แทน ดูไฟล์ App.xaml.cs
 
         return app;
     }
