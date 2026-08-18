@@ -30,16 +30,17 @@ jobs:
       # ซึ่ง macOS build ไม่รองรับ target windows แล้วจะ error:
       # "To build a project targeting Windows on this operating system, set the EnableWindowsTargeting property to true."
       - name: Restore dependencies (iOS device only)
-        run: dotnet restore ExpenseTrackerApp/ExpenseTrackerApp.csproj -p:TargetFramework=net10.0-ios -p:RuntimeIdentifier=ios-arm64
+        run: dotnet restore ExpenseTrackerApp/ExpenseTrackerApp.csproj -p:TargetFramework=net10.0-ios -p:RuntimeIdentifier=ios-arm64 -p:Configuration=Release
 
-      # Build แบบไม่ sign (unsigned) สำหรับ "เครื่อง iPhone จริง" (arm64)
-      # ไฟล์ .app ที่ได้ยังไม่ได้ sign ด้วย certificate ของ Apple
-      # ต้องนำไป sign เพิ่มด้วยเครื่องมืออย่าง SideStore (ใช้ Apple ID ฟรี) ก่อนถึงจะติดตั้งลงเครื่องจริงได้
-      - name: Build for iOS Device (ad-hoc signed)
+      # Build แบบ Release (ad-hoc signed) สำหรับ "เครื่อง iPhone จริง" (arm64)
+      # ใช้ Release แทน Debug เพราะ Debug ใช้ Mono Interpreter ที่โหลดช้ามากบนอุปกรณ์จริง
+      # ทำให้ iOS watchdog (0x8BADF00D) ฆ่าแอปทิ้งตอนเปิดเพราะใช้เวลาเกินที่กำหนด (~15-20 วิ)
+      # Release จะ compile แบบ Full AOT ทำให้เปิดเร็วกว่ามาก
+      - name: Build for iOS Device (ad-hoc signed, Release)
         run: |
           dotnet build ExpenseTrackerApp/ExpenseTrackerApp.csproj \
             -p:TargetFramework=net10.0-ios \
-            -c Debug \
+            -c Release \
             --no-restore \
             -p:RuntimeIdentifier=ios-arm64 \
             -p:PlatformTarget=ARM64 \
@@ -53,7 +54,7 @@ jobs:
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
-          name: ios-device-build-unsigned
+          name: ios-device-build-release
           path: |
             **/bin/**/*.app
             **/bin/**/*.ipa
